@@ -23,6 +23,7 @@ BuildRequires:	rpmbuild(macros) >= 1.714
 %if %{with python2}
 BuildRequires:	python-modules >= 1:2.7
 %{?with_tests:BuildRequires:	python-pytest >= 2.8.6}
+%{?with_tests:BuildRequires:	python-scandir}
 BuildRequires:	python-setuptools
 %endif
 %if %{with python3}
