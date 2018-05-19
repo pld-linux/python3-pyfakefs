@@ -1,0 +1,20 @@
+--- pyfakefs-3.4.1/tests/fake_os_test.py.orig	2018-03-18 08:35:26.000000000 +0100
++++ pyfakefs-3.4.1/tests/fake_os_test.py	2018-05-19 21:06:12.791205352 +0200
+@@ -964,7 +964,7 @@
+ 
+     def test_append_mode_tell_linux_windows(self):
+         self.check_linux_and_windows()
+-        tell_result = 5 if self.is_python2 else 7
++        tell_result = 5 if (self.is_python2 and not self.use_real_fs()) else 7
+         self.check_append_mode_tell_after_truncate(tell_result)
+ 
+     def test_append_mode_tell_macos(self):
+@@ -4113,6 +4113,8 @@
+     def test_path_links_not_resolved(self):
+         # regression test for #350
+         self.skip_if_symlink_not_supported()
++        if not hasattr(self.os, 'scandir'):
++            raise unittest.SkipTest('os.scandir not found')
+         dir_path = self.make_path('A', 'B', 'C')
+         self.os.makedirs(self.os.path.join(dir_path, 'D'))
+         link_path = self.make_path('A', 'C')
