@@ -18,3 +18,14 @@
          dir_path = self.make_path('A', 'B', 'C')
          self.os.makedirs(self.os.path.join(dir_path, 'D'))
          link_path = self.make_path('A', 'C')
+--- pyfakefs-3.4.1/pyfakefs/fake_filesystem_unittest.py.orig	2018-03-18 08:35:26.000000000 +0100
++++ pyfakefs-3.4.1/pyfakefs/fake_filesystem_unittest.py	2018-05-20 20:39:45.228782238 +0200
+@@ -70,7 +70,7 @@
+ 
+ try:
+     import scandir  # noqa: F401 import used to set has_scandir
+-    import fake_scandir
++    from pyfakefs import fake_scandir
+     has_scandir = True
+ except ImportError:
+     has_scandir = False
