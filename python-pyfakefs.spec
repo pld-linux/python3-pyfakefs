@@ -8,13 +8,13 @@
 Summary:	Fake file system that mocks the Python 2 file system modules
 Summary(pl.UTF-8):	Fałszywy system plików będący atrapą modułów systemowych Pythona 2 dla plików
 Name:		python-pyfakefs
-Version:	3.4.1
-Release:	2
+Version:	3.4.3
+Release:	1
 License:	Apache v2.0
 Group:		Libraries/Python
 #Source0Download: https://github.com/jmcgeheeiv/pyfakefs/releases
 Source0:	https://github.com/jmcgeheeiv/pyfakefs/archive/v%{version}/pyfakefs-%{version}.tar.gz
-# Source0-md5:	bfd4362f7942333ce2666f9f0110e584
+# Source0-md5:	8044a683bc025c0e2b2594b7d8de1083
 Patch0:		%{name}-tests.patch
 URL:		http://pyfakefs.org/
 BuildRequires:	rpm-pythonprov
@@ -88,9 +88,9 @@ export LC_ALL=C.UTF-8
 %py_build
 
 %if %{with tests}
-%{__python} -m tests.all_tests
+%{__python} -m pyfakefs.tests.all_tests
 PYTHONPATH=$(pwd)/build-2/lib PYTEST_PLUGINS=pyfakefs.pytest_plugin \
-py.test-2 tests/pytest_plugin_test.py
+py.test-2 build-2/lib/pyfakefs/tests/pytest_plugin_test.py
 %endif
 %endif
 
@@ -98,9 +98,9 @@ py.test-2 tests/pytest_plugin_test.py
 %py3_build
 
 %if %{with tests}
-%{__python3} -m tests.all_tests
+%{__python3} -m pyfakefs.tests.all_tests
 PYTHONPATH=$(pwd)/build-3/lib PYTEST_PLUGINS=pyfakefs.pytest_plugin \
-py.test-3 tests/pytest_plugin_test.py
+py.test-3 build-3/lib/pyfakefs/tests/pytest_plugin_test.py
 %endif
 %endif
 

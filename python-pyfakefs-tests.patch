@@ -1,5 +1,5 @@
---- pyfakefs-3.4.1/tests/fake_os_test.py.orig	2018-03-18 08:35:26.000000000 +0100
-+++ pyfakefs-3.4.1/tests/fake_os_test.py	2018-05-19 21:06:12.791205352 +0200
+--- pyfakefs-3.4.1/pyfakefs/tests/fake_os_test.py.orig	2018-03-18 08:35:26.000000000 +0100
++++ pyfakefs-3.4.1/pyfakefs/tests/fake_os_test.py	2018-05-19 21:06:12.791205352 +0200
 @@ -964,7 +964,7 @@
  
      def test_append_mode_tell_linux_windows(self):
