@@ -89,8 +89,11 @@ export LC_ALL=C.UTF-8
 
 %if %{with tests}
 %{__python} -m pyfakefs.tests.all_tests
-PYTHONPATH=$(pwd)/build-2/lib PYTEST_PLUGINS=pyfakefs.pytest_plugin \
-py.test-2 build-2/lib/pyfakefs/tests/pytest_plugin_test.py
+
+PYTHONPATH=$(pwd) \
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+PYTEST_PLUGINS=pyfakefs.pytest_plugin \
+%{__python} -m pytest pyfakefs/tests/pytest_plugin_test.py
 %endif
 %endif
 
@@ -99,8 +102,10 @@ py.test-2 build-2/lib/pyfakefs/tests/pytest_plugin_test.py
 
 %if %{with tests}
 %{__python3} -m pyfakefs.tests.all_tests
-PYTHONPATH=$(pwd)/build-3/lib PYTEST_PLUGINS=pyfakefs.pytest_plugin \
-py.test-3 build-3/lib/pyfakefs/tests/pytest_plugin_test.py
+PYTHONPATH=$(pwd) \
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+PYTEST_PLUGINS=pyfakefs.pytest_plugin \
+%{__python3} -m pytest pyfakefs/tests/pytest_plugin_test.py
 %endif
 %endif
 
