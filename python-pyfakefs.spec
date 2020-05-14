@@ -8,28 +8,36 @@
 Summary:	Fake file system that mocks the Python 2 file system modules
 Summary(pl.UTF-8):	Fałszywy system plików będący atrapą modułów systemowych Pythona 2 dla plików
 Name:		python-pyfakefs
-Version:	3.4.3
-Release:	2
+Version:	3.7.2
+Release:	1
 License:	Apache v2.0
 Group:		Libraries/Python
 #Source0Download: https://github.com/jmcgeheeiv/pyfakefs/releases
 Source0:	https://github.com/jmcgeheeiv/pyfakefs/archive/v%{version}/pyfakefs-%{version}.tar.gz
-# Source0-md5:	8044a683bc025c0e2b2594b7d8de1083
-Patch0:		%{name}-tests.patch
+# Source0-md5:	e34234db867202b035d48a77d1c78d82
 URL:		http://pyfakefs.org/
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
 %{?with_doc:BuildRequires:	sphinx-pdg >= 1.0}
 %if %{with python2}
 BuildRequires:	python-modules >= 1:2.7
-%{?with_tests:BuildRequires:	python-pytest >= 2.8.6}
-%{?with_tests:BuildRequires:	python-scandir}
 BuildRequires:	python-setuptools
+%if %{with tests}
+BuildRequires:	python-pathlib2 >= 2.3.2
+BuildRequires:	python-pytest >= 2.8.6
+BuildRequires:	python-scandir >= 1.8
+%endif
 %endif
 %if %{with python3}
-BuildRequires:	python3-modules >= 1:3.3
-%{?with_tests:BuildRequires:	python3-pytest >= 2.8.6}
+BuildRequires:	python3-modules >= 1:3.4
 BuildRequires:	python3-setuptools
+%if %{with tests}
+BuildRequires:	python3-pytest >= 2.8.6
+%if "%{py3_ver}" < "3.6"
+BuildRequires:	python3-pathlib2 >= 2.3.2
+BuildRequires:	python3-scandir >= 1.8
+%endif
+%endif
 %endif
 Requires:	python-modules >= 1:2.7
 BuildArch:	noarch
@@ -52,7 +60,7 @@ aby działało z pyfakefs.
 Summary:	Fake file system that mocks the Python 3 file system modules
 Summary(pl.UTF-8):	Fałszywy system plików będący atrapą modułów systemowych Pythona 3 dla plików
 Group:		Libraries/Python
-Requires:	python3-modules >= 1:3.3
+Requires:	python3-modules >= 1:3.4
 
 %description -n python3-pyfakefs
 pyfakefs implements a fake file system that mocks the Python file
@@ -80,7 +88,6 @@ Dokumentacja API modułu Pythona pyfakefs.
 
 %prep
 %setup -q -n pyfakefs-%{version}
-%patch0 -p1
 
 %build
 export LC_ALL=C.UTF-8
@@ -89,11 +96,24 @@ export LC_ALL=C.UTF-8
 
 %if %{with tests}
 %{__python} -m pyfakefs.tests.all_tests
+# fails on pathlib
+#%{__python} -m pyfakefs.tests.all_tests_without_extra_packages
 
 PYTHONPATH=$(pwd) \
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
 PYTEST_PLUGINS=pyfakefs.pytest_plugin \
-%{__python} -m pytest pyfakefs/tests/pytest_plugin_test.py
+%{__python} -m pytest \
+	pyfakefs/pytest_tests/pytest_plugin_test.py
+# fails with python2 (any < 3.6?)
+#pyfakefs/pytest_tests/pytest_fixture_test.py
+
+PYTHONPATH=$(pwd) \
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+PYTEST_PLUGINS=pyfakefs.pytest_plugin \
+%{__python} -m pytest \
+	pyfakefs/pytest_tests/pytest_plugin_failing_test.py > testresult.txt || :
+%{__python} -m pytest \
+	pyfakefs/pytest_tests/pytest_check_failed_plugin_test.py
 %endif
 %endif
 
@@ -102,10 +122,22 @@ PYTEST_PLUGINS=pyfakefs.pytest_plugin \
 
 %if %{with tests}
 %{__python3} -m pyfakefs.tests.all_tests
+%{__python3} -m pyfakefs.tests.all_tests_without_extra_packages
+
 PYTHONPATH=$(pwd) \
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
 PYTEST_PLUGINS=pyfakefs.pytest_plugin \
-%{__python3} -m pytest pyfakefs/tests/pytest_plugin_test.py
+%{__python3} -m pytest \
+	pyfakefs/pytest_tests/pytest_fixture_test.py \
+	pyfakefs/pytest_tests/pytest_plugin_test.py
+
+PYTHONPATH=$(pwd) \
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+PYTEST_PLUGINS=pyfakefs.pytest_plugin \
+%{__python3} -m pytest \
+	pyfakefs/pytest_tests/pytest_plugin_failing_test.py > testresult.txt || :
+%{__python3} -m pytest \
+	pyfakefs/pytest_tests/pytest_check_failed_plugin_test.py
 %endif
 %endif
 
