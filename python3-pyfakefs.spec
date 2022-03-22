@@ -6,15 +6,15 @@
 Summary:	Fake file system that mocks the Python 3 file system modules
 Summary(pl.UTF-8):	Fałszywy system plików będący atrapą modułów systemowych Pythona 3 dla plików
 Name:		python3-pyfakefs
-Version:	4.0.2
-Release:	2
+Version:	4.5.6
+Release:	1
 License:	Apache v2.0
 Group:		Libraries/Python
 #Source0Download: https://github.com/jmcgeheeiv/pyfakefs/releases
 Source0:	https://github.com/jmcgeheeiv/pyfakefs/archive/v%{version}/pyfakefs-%{version}.tar.gz
-# Source0-md5:	82a7decddd919da996b34d4a8de4ca72
+# Source0-md5:	1bba55441b8108284c04f5833ccea1d6
 URL:		http://pyfakefs.org/
-BuildRequires:	python3-modules >= 1:3.5
+BuildRequires:	python3-modules >= 1:3.6
 BuildRequires:	python3-setuptools
 %if %{with tests}
 BuildRequires:	python3-pytest >= 2.8.6
@@ -25,8 +25,8 @@ BuildRequires:	python3-scandir >= 1.8
 %endif
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
-%{?with_doc:BuildRequires:	sphinx-pdg >= 1.0}
-Requires:	python3-modules >= 1:3.5
+%{?with_doc:BuildRequires:	sphinx-pdg-3 >= 1.0}
+Requires:	python3-modules >= 1:3.6
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -58,7 +58,6 @@ Dokumentacja API modułu Pythona pyfakefs.
 %setup -q -n pyfakefs-%{version}
 
 %build
-#export LC_ALL=C.UTF-8
 %py3_build
 
 %if %{with tests}
@@ -69,20 +68,12 @@ PYTHONPATH=$(pwd) \
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
 PYTEST_PLUGINS=pyfakefs.pytest_plugin \
 %{__python3} -m pytest \
-	pyfakefs/pytest_tests/pytest_fixture_test.py \
 	pyfakefs/pytest_tests/pytest_plugin_test.py
-
-PYTHONPATH=$(pwd) \
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
-PYTEST_PLUGINS=pyfakefs.pytest_plugin \
-%{__python3} -m pytest \
-	pyfakefs/pytest_tests/pytest_plugin_failing_test.py > testresult.txt || :
-%{__python3} -m pytest \
-	pyfakefs/pytest_tests/pytest_check_failed_plugin_test.py
 %endif
 
 %if %{with doc}
-%{__make} -C docs html
+%{__make} -C docs html \
+	SPHINXBUILD=sphinx-build-3
 %endif
 
 %install
