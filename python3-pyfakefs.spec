@@ -6,13 +6,13 @@
 Summary:	Fake file system that mocks the Python 3 file system modules
 Summary(pl.UTF-8):	Fałszywy system plików będący atrapą modułów systemowych Pythona 3 dla plików
 Name:		python3-pyfakefs
-Version:	4.7.0
-Release:	3
+Version:	5.8.0
+Release:	1
 License:	Apache v2.0
 Group:		Libraries/Python
 #Source0Download: https://github.com/jmcgeheeiv/pyfakefs/releases
 Source0:	https://github.com/jmcgeheeiv/pyfakefs/archive/v%{version}/pyfakefs-%{version}.tar.gz
-# Source0-md5:	93ea854b6377cfb3231c8a2005d3a978
+# Source0-md5:	8d389be77c1ea0c3f9cc514444c610d0
 URL:		https://pyfakefs.org/
 BuildRequires:	python3-modules >= 1:3.7
 BuildRequires:	python3-setuptools
